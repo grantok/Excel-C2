@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"Excel-C2/internal/configuration"
 	"log"
 	"os"
 	"strconv"
@@ -15,20 +14,27 @@ func GenerateNewSheetName() string {
 	unixString := strconv.FormatInt(currentTime.Unix(), 10)
 	hostname, err := os.Hostname()
 	if err != nil {
-		return currentTimeS + "-" + unixString[len(unixString)-5:]
+		return currentTimeS + "_" + unixString[len(unixString)-5:]
 	}
 
-	return currentTimeS + "-" + hostname + "-" + unixString[len(unixString)-5:]
+	// return currentTimeS + "_" + hostname + "_" + unixString[len(unixString)-5:]
+	return currentTimeS + "_" + hostname
 }
 
 func LogDebug(message string) {
-	if configuration.GetOptionsDebug() {
-		log.Println(message)
-	}
+	// if configuration.GetOptionsDebug() {
+	log.Println(message)
+	// }
 }
 
 func LogFatalDebug(message string) {
-	if configuration.GetOptionsDebug() {
-		log.Fatal(message)
-	}
+	// if configuration.GetOptionsDebug() {
+	log.Fatal(message)
+	// }
+}
+
+func LogFatalDebugError(message string, err error) {
+	// if configuration.GetOptionsDebug() {
+	log.Fatal(message, err)
+	// }
 }

@@ -14,9 +14,9 @@ type Sheet struct {
 }
 
 type Commands struct {
-	RangeIn  string
+	RangeIn  string // Ex !A
 	RangeOut string
-	RangeId  string
+	RangeId  int // Ex 1
 	Input    string
 	Output   string
 }
