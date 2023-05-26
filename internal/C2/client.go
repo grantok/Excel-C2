@@ -23,6 +23,7 @@ type Client struct {
 	ClientSecret string
 	DriveId      string
 	SheetId      string
+	SheetName    string
 	TokenId      string
 	HttpClient   HTTPClient
 	APIKey       string
@@ -42,11 +43,13 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 	// 	buf = new(bytes.Buffer)
 	// 	err := json.NewEncoder(buf).Encode(body)
 	// 	if err != nil {
+	// 		fmt.Println("Error encoding body")
 	// 		return nil, err
 	// 	}
 	// }
-	body_string := body.(string)
-	buf := bytes.NewBufferString(body_string)
+	// body_string := body.(string)
+	// buf := bytes.NewBufferString(body_string)
+	buf := body.(*bytes.Buffer)
 	req, err := http.NewRequest(method, u, buf)
 	// req, err := http.NewRequest(method, u.String(), buf)
 	if err != nil {

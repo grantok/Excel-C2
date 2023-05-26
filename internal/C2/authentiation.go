@@ -3,6 +3,7 @@ package C2
 import (
 	"Excel-C2/internal/utils"
 	"context"
+	"fmt"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	azidentity "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
@@ -32,6 +33,7 @@ func (c *Client) Authenticate() (context.Context, string) {
 		utils.LogDebug("token success")
 	}
 	c.APIKey = tkn.Token
+	fmt.Println(tkn.Token)
 
 	return ctx, tkn.Token
 }
