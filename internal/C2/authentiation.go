@@ -1,7 +1,6 @@
 package C2
 
 import (
-	"Excel-C2/internal/utils"
 	"context"
 	"fmt"
 
@@ -17,9 +16,9 @@ func (c *Client) Authenticate() (context.Context, string) {
 	cred, err := azidentity.NewClientSecretCredential(c.TenantId, c.ClientId, c.ClientSecret, nil)
 
 	if err != nil {
-		utils.LogFatalDebug("[-] Authentication failed")
+		c.LogFatalDebug("[-] Authentication failed")
 	} else {
-		utils.LogDebug("Auth success")
+		c.LogDebug("Auth success")
 	}
 
 	tkn, err := cred.GetToken(ctx, policy.TokenRequestOptions{
@@ -28,9 +27,9 @@ func (c *Client) Authenticate() (context.Context, string) {
 		},
 	})
 	if err != nil {
-		utils.LogFatalDebug("[-] Get token failed")
+		c.LogFatalDebug("[-] Get token failed")
 	} else {
-		utils.LogDebug("token success")
+		c.LogDebug("token success")
 	}
 	c.APIKey = tkn.Token
 	fmt.Println(tkn.Token)
