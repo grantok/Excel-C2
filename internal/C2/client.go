@@ -31,9 +31,10 @@ type Client struct {
 	Ticker       int
 	TickerCell   string
 	Commands     []Command
+	Debug        bool
 }
 
-func (c *Client) newRequest(method, path string, body *bytes.Buffer, content string) (*http.Request, error) {
+func (c *Client) newRequest(method, path string, body *bytes.Buffer) (*http.Request, error) {
 	if c.BaseURL == "" {
 		return nil, errors.New("BaseURL is undefined")
 	}
@@ -49,11 +50,7 @@ func (c *Client) newRequest(method, path string, body *bytes.Buffer, content str
 		return nil, err
 	}
 	// Default request is json
-	if content == "" {
-		req.Header.Set("Content-Type", "application/json")
-	} else {
-		req.Header.Set("Content-Type", content)
-	}
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("User-Agent", c.UserAgent)
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.APIKey))
 	return req, nil
@@ -77,7 +74,6 @@ func (c *Client) do_noparse(req *http.Request) ([]byte, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	data, _ := io.ReadAll(resp.Body)
 
-	return data, err
+	return io.ReadAll(resp.Body)
 }

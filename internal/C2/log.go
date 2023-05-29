@@ -3,19 +3,19 @@ package C2
 import "log"
 
 func (c *Client) LogDebug(message string) {
-	// if configuration.GetOptionsDebug() {
-	log.Println(message)
-	// }
+	if c.Debug {
+		log.Println(message)
+	}
 }
 
 func (c *Client) LogFatalDebug(message string) {
-	// if configuration.GetOptionsDebug() {
-	log.Fatal(message)
-	// }
+	if c.Debug {
+		log.Fatal(message)
+	}
 }
 
 func (c *Client) LogFatalDebugError(message string, err error) {
-	// if configuration.GetOptionsDebug() {
-	log.Fatal(message, err)
-	// }
+	if c.Debug {
+		log.Fatal(message, err)
+	}
 }

