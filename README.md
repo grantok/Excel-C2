@@ -132,11 +132,11 @@ By sending the command *exit*, the program will delete itself from the target an
 
 ### WorkFlow
 
-Coming soon
+![Workflow](img/workflow.png)
 
 ### Demo
 
-Coming soon
+![Demo](img/demo.gif)
 
 ### Disclaimer
 
