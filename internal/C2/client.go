@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 // HTTPClient interface
@@ -34,6 +35,7 @@ type Client struct {
 	TickerCell   string
 	Commands     []Command
 	Debug        bool
+	AuthExpire   time.Time
 }
 
 func (c *Client) newRequest(method, path string, body *bytes.Buffer) (*http.Request, error) {

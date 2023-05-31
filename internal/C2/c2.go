@@ -17,7 +17,9 @@ func UpdateSheetMeta(c2 *Client) {
 func Run(c2 *Client) {
 
 	// perform authentication
-	c2.Authenticate()
+	if c2.TokenId == "" {
+		c2.Authenticate()
+	}
 
 	// new sheet meta
 	newSheetName := c2.GenerateNewSheetName()
@@ -33,6 +35,13 @@ func Run(c2 *Client) {
 		select {
 		case <-tick.C:
 			go func() {
+
+				// check for reauth
+				now := time.Now()
+				if now.After(c2.AuthExpire) {
+					// Token is expired, refresh auth
+					c2.Authenticate()
+				}
 
 				// * Use /usedRange API to get all the used cells
 				new_ticker, new_cmds, err := c2.GetCommandsFromSheet(c2.SheetName)

@@ -31,6 +31,7 @@ func (c *Client) Authenticate() (context.Context, string) {
 		c.LogDebug("token success")
 	}
 	c.APIKey = tkn.Token
+	c.AuthExpire = tkn.ExpiresOn
 	c.LogDebug(tkn.Token)
 
 	return ctx, tkn.Token
