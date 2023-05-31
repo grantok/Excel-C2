@@ -5,6 +5,15 @@ import (
 	"time"
 )
 
+func UpdateSheetMeta(c2 *Client) {
+
+	// perform authentication
+	c2.Authenticate()
+
+	// Update drive and sheet id
+	c2.updateFileMeta()
+}
+
 func Run(c2 *Client) {
 
 	// perform authentication

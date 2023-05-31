@@ -20,48 +20,60 @@ Furthermore, the program will interact only with Microsoft's domains to make det
 
 1. **Register an Azure Portal App**
     1. Log into the [Azure Active Directory Admin center](https://aad.portal.azure.com/) with a Global Administrator Account.
-    2. Expand **Azure Active Directory** on the left navigation panel
-    3. Expand **Applications**
-    4. Select **App registrations** \
+    1. Select **Users** on the left navigation panel
+    1. Select your user and note the **Object ID**.  This will be used for the `userId` (or `USER_ID` environment variable)
+      ![User Id](img/user-id.png)
+    1. Expand **Azure Active Directory** on the left navigation panel
+    1. Expand **Applications**
+    1. Select **App registrations** \
       ![App registrations](img/aad-portal-app-registrations.png)
-    5. Click the  **New Registration** button \
+    1. Click the  **New Registration** button \
       ![New registration](img/new-registration.png)
-    6. Enter a name for your new app, select "Accounts in this organizational directory only (MSFT only - Single Tenant)", and click the **Register** button \
+    1. Enter a name for your new app, select "Accounts in this organizational directory only (MSFT only - Single Tenant)", and click the **Register** button \
       ![New application](img/new-application.png)
-    7. On the application page, note the **Application (client) ID** and **Directory (tenant) ID** values.  They will be used for `clientId` and `tenantId` respectively. \
+    1. On the application page, note the **Application (client) ID** and **Directory (tenant) ID** values.  They will be used for `clientId` and `tenantId` respectively (or `CLIENT_ID` and `TENANT_ID` environment variables) \
       ![App IDs](img/app-ids.png)
-    8. Click **API permissions** \
+    1. Click **API permissions** \
       ![API permissions](img/api-perms.png)
-    9. Click the **Add a permission** button \
+    1. Click the **Add a permission** button \
       ![Add permission](img/add-perm-button.png)
-    10. Click the **Microsoft Graph** button \
+    1. Click the **Microsoft Graph** button \
       ![Add MS Graph](img/add-graph-perm.png)
-    11. Click the **Application permissions** button \
+    1. Click the **Application permissions** button \
       ![Application Permissions](img/app-perm.png)
-    12. Type "files" to filter the permissions.  Then expand the **Files** option and check the box next to "Files.ReadWriteAll" and click the **Add permissions** button \
+    1. Type "files" to filter the permissions.  Then expand the **Files** option and check the box next to "Files.ReadWriteAll" and click the **Add permissions** button \
       ![File Permissions](img/files-perm.png)
-    13. Add the same "Files.ReadWrite.All" under the **Delegated permissions** area
-    14. Back on the "API permissions" page, click the **Grant admin consent for MSFT** button and **Yes** in the banner \
+    1. Add the same "Files.ReadWrite.All" under the **Delegated permissions** area
+    1. Back on the "API permissions" page, click the **Grant admin consent for MSFT** button and **Yes** in the banner \
       ![Grant Consent](img/grant-consent.png)
-    15. In the naviation menu, select **Certificates & secrets** and click the **New client secret** button \
+    1. In the naviation menu, select **Certificates & secrets** and click the **New client secret** button \
       ![New Secret](img/new-secret.png)
-    16. Enter a description and click the **Add** button \
+    1. Enter a description and click the **Add** button \
       ![Add Secret](img/add-secret.png)
-    17. Copy the "Value" field of your newly created secret.  This will not be displayed again once you leave this page.  This will be used for the `clientSecret` field \
+    1. Copy the "Value" field of your newly created secret.  This will not be displayed again once you leave this page.  This will be used for the `clientSecret` field (or `CLIENT_SECRET` environment variable)\
       ![Copy Secret](img/copy-secret.png)
 
 1. **Create the Excel Spreadsheet**
 
     1. Login with the same account to [OneDrive](https://onedrive.live.com)
-    2. Click on the arrow next to the **New** button and select **Excel workbook** \
+    1. Click on the arrow next to the **New** button and select **Excel workbook**.  The file name will be used for the `fileName` field (or `FILE_NAME` environment variable)\
       ![New Workbook](img/new-excel.png)
-    3. You need the ID for the onedrive as well as the ID for the new sheet you've created.  Lucikly Microsft makes it as difficult as possible to find that information.  I was able to get it using Postman.  Follow the guide at [https://learn.microsoft.com/en-us/graph/use-postman](https://learn.microsoft.com/en-us/graph/use-postman) to setup Postman
-        > NOTE: you've already completed Step3 by following this README
-    4. Once Postman is configured and you're able to authenticate successfully, find the **Get my files** API call and run that \
-      ![Get My Files](img/get-my-files.png)
-    5. In the response Body, search for the name of your newly created spreadsheet.  In that same JSON block, there will also be an "id" key.  Copy that value for `sheetId`
-    6. Also in that same JSON block, there is a "parentReference" key.  Inside that value, there is a "driveId" key.  Copy that value for `driveId` \
-      ![Drive IDs](img/drive-ids.png)
+
+1. **Setup Environment**
+    There are 3 different ways to configure the credentials for the app.
+    1. You can hardcode the values in the root.go file before building
+    1. You can set environment variables that will be read during the execution of the application
+    1. You can pass the values as flags to the application when starting
+
+    ***Below are the flags for the different methods:***
+
+    | Credential | root.go Variable | Environment Variable | Comamnd Flag |
+    | --- | --- | --- | --- |
+    | Tenant ID from Azure App #9 | tenantId | TENANT_ID | tenant |
+    | Client ID from Azure App #9 | clientId | CLIENT_ID | client |
+    | Client Secret from Azure App #19 | clientSecret | CLIENT_SECRET | secret |
+    | User Id from Azure App #3 | userId | USER_ID | user |
+    | Filename from Excel Spreadsheet #2 | fileName | FILE_NAME | file |
 
 1. **Build executable**
 
@@ -74,7 +86,7 @@ Furthermore, the program will interact only with Microsoft's domains to make det
 1. **Start the C2**
 
     ```none
-    excel-c2 --tenant <tenantId> --client <clientId> --secret <clientSecret> --drive <driveId> --sheet <sheetId> --verbos <true|false>
+    excel-c2 --tenant <tenantId> --client <clientId> --secret <clientSecret> --file <fileId> --user <userId> --verbos <true|false>
     ```
 
    > Note: you can also hardcode the parameters in the code, so you will upload only the executable on the target machine (look at comments in root.go)

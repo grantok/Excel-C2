@@ -25,6 +25,8 @@ type Client struct {
 	DriveId      string
 	SheetId      string
 	SheetName    string
+	UserId       string
+	FileName     string
 	TokenId      string
 	HttpClient   HTTPClient
 	APIKey       string

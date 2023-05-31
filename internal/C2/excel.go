@@ -41,6 +41,17 @@ type CellRange struct {
 	Values        [][]any `json:"values"`
 }
 
+type DriveMeta struct {
+	DriveType string `json:"driveType"`
+	DriveId   string `json:"driveId"`
+}
+
+type ExcelFile struct {
+	Id              string    `json:"id"`
+	Name            string    `json:"name"`
+	ParentReference DriveMeta `json:"parentReference"`
+}
+
 type Ok struct {
 	Ok bool `json:"ok"`
 }
@@ -175,6 +186,22 @@ func (c *Client) GetCommandsFromSheet(ws_name string) (int, []Command, error) {
 	}
 
 	return tick, cmds, err
+}
+
+func (c *Client) updateFileMeta() {
+	req, err := c.newRequest("GET", "/", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	exf := new(ExcelFile)
+	_, err = c.do(req, &exf)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.SheetId = exf.Id
+	c.DriveId = exf.ParentReference.DriveId
 }
 
 func (c *Client) convertCellsToCommands(cells CellRange, cmds []Command) []Command {

