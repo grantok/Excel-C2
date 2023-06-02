@@ -60,6 +60,7 @@ Furthermore, the program will interact only with Microsoft's domains to make det
       ![New Workbook](img/new-excel.png)
 
 1. **Setup Environment**
+
     There are 3 different ways to configure the credentials for the app.
     1. You can hardcode the values in the root.go file before building
     1. You can set environment variables that will be read during the execution of the application
