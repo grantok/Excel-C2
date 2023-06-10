@@ -18,11 +18,13 @@ Furthermore, the program will interact only with Microsoft's domains to make det
 
 ## Set up
 
-1. **Register an Azure Portal App**
+1. **Get User ID**
     1. Log into the [Azure Active Directory Admin center](https://aad.portal.azure.com/) with a Global Administrator Account.
     1. Select **Users** on the left navigation panel
     1. Select your user and note the **Object ID**.  This will be used for the `userId` (or `USER_ID` environment variable)
       ![User Id](img/user-id.png)
+
+1. **Register an Azure Portal App**
     1. Expand **Azure Active Directory** on the left navigation panel
     1. Expand **Applications**
     1. Select **App registrations** \
